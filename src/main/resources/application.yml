@@ -1,0 +1,13 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: loans
+  datasource:
+    url: jdbc:mysql://localhost:3360/loans
+    username: root
+    password: magento
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
