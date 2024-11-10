@@ -1,5 +1,6 @@
 package com.ps.loans.controllers;
 
+import com.ps.loans.config.ApiConfig;
 import com.ps.loans.constants.LoansConstants;
 import com.ps.loans.dto.LoansDto;
 import com.ps.loans.dto.ResponseDto;
@@ -13,13 +14,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(path = "/api")
 @Validated
-@AllArgsConstructor
 public class LoansController {
 
     private final LoansServiceInterface loansService;
+    private final ApiConfig apiConfig;
+
+    public LoansController(
+        LoansServiceInterface loansService,
+        ApiConfig apiConfig
+    ) {
+        this.loansService = loansService;
+        this.apiConfig = apiConfig;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createLoan(
@@ -88,5 +99,16 @@ public class LoansController {
                     .status(HttpStatus.EXPECTATION_FAILED)
                     .body(new ResponseDto(LoansConstants.STATUS_417, LoansConstants.MESSAGE_417_DELETE));
         }
+    }
+
+    @GetMapping("/version")
+    public ResponseEntity<Map<String, String>> buildVersion()
+    {
+        String version = this.apiConfig.getVersion();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                        Map.of("version", version)
+                );
     }
 }
